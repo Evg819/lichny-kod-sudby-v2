@@ -1,0 +1,962 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ваш личный код судьбы</title>
+<style>
+:root{
+  --bg:#070504;
+  --bg2:#0d0806;
+  --choc:#160d09;
+  --choc2:#21140e;
+  --gold:#e7c66a;
+  --gold-soft:#c89537;
+  --gold-deep:#6e4617;
+  --text:#f7ecd3;
+  --muted:#cfba8d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+body{
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(231,198,106,.08),transparent 26%),
+    linear-gradient(180deg,#090604 0%,#0e0806 50%,#070504 100%);
+}
+.page{
+  position:relative;
+  width:820px;
+  margin:0 auto;
+  padding:18px 18px 26px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 10%,rgba(231,198,106,.035),transparent 32%),
+    transparent;
+}
+.stars{
+  position:absolute;inset:0;pointer-events:none;opacity:.42;
+  background-image:
+    radial-gradient(circle,rgba(255,225,150,.95) 0 1px,transparent 1.35px),
+    radial-gradient(circle,rgba(255,225,150,.45) 0 1px,transparent 1.35px);
+  background-size:170px 170px,250px 250px;
+  background-position:8px 12px,84px 130px;
+}
+.header{position:relative;z-index:3;text-align:center}
+h1{
+  margin:0;
+  font-size:40px;
+  font-weight:500;
+  line-height:1;
+  letter-spacing:.065em;
+  color:#f1cf73;
+  text-shadow:0 0 28px rgba(231,198,106,.15)
+}
+.author{
+  margin-top:8px;
+  font-size:21px;
+  letter-spacing:.045em;
+  color:#ead078;
+  font-weight:600;
+}
+.consult-link{
+  display:inline-block;margin-top:10px;padding:9px 20px;
+  border:1px solid #c89537;border-radius:22px;
+  color:#f1cf73;text-decoration:none;
+  font:500 13px/1.2 Georgia,"Times New Roman",serif;
+  letter-spacing:.055em;
+  background:linear-gradient(180deg,#24160d,#120b07);
+  box-shadow:0 0 16px rgba(231,198,106,.12);
+}
+.consult-link:hover,.consult-link:focus-visible{background:#34210f;border-color:#e7c66a}
+.people-x-result{
+  margin:15px auto 2px;
+  padding:12px 20px;
+  max-width:360px;
+  border:1px solid rgba(231,198,106,.62);
+  border-radius:16px;
+  background:linear-gradient(145deg,#23160e,#100a07);
+  color:#ead078;
+  font:500 17px/1.35 Georgia,"Times New Roman",serif;
+  letter-spacing:.04em;
+  text-align:center;
+  box-shadow:0 0 18px rgba(231,198,106,.09)
+}
+.people-x-result[hidden]{display:none!important}
+.people-x-result strong{color:#f1cf73;font-size:22px}
+@media(max-width:600px){.author{font-size:19px}.consult-link{font-size:12px}.people-x-result{font-size:15px}}
+.rule{
+  width:400px;height:1px;margin:10px auto 0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  box-shadow:0 0 12px rgba(231,198,106,.32)
+}
+.input-block{width:360px;margin:14px auto 6px;text-align:center}
+.input-label{font:700 16px/1.2 system-ui,sans-serif;color:#e2c36c;letter-spacing:.08em;margin-bottom:8px}
+.date-wrap{display:flex;align-items:center;gap:8px}
+.name-calculation{margin-top:10px;display:grid;gap:8px}
+.name-field{
+  width:100%;height:42px;border-radius:14px;border:1px solid rgba(231,198,106,.58);
+  background:linear-gradient(180deg,#140e0a,#0b0705);
+  color:#fff5dc;padding:0 18px;font:15px system-ui,sans-serif;letter-spacing:.04em;outline:none;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.42),0 0 18px rgba(231,198,106,.07)
+}
+#dob,
+.name-field{
+  transition:border-color .2s ease,box-shadow .2s ease
+}
+#dob{
+  flex:1;height:44px;border-radius:14px;border:1px solid var(--gold);
+  background:linear-gradient(180deg,#140e0a,#0b0705);
+  color:#fff5dc;padding:0 18px;font-size:15px;letter-spacing:.12em;outline:none;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.42),0 0 18px rgba(231,198,106,.07)
+}
+#dob:focus,.name-field:focus{
+  border-color:#f1d47d;
+  box-shadow:0 0 0 2px rgba(231,198,106,.12),inset 0 0 18px rgba(0,0,0,.42)
+}
+.name-results{
+  margin-top:10px;padding:9px 12px;border-top:1px solid rgba(231,198,106,.25);
+  color:#e0cfaa;font:14px/1.55 system-ui,sans-serif;text-align:left
+}
+.name-result-value{color:#f1cf73;font-weight:800}
+.calc{
+  height:44px;padding:0 18px;border:1px solid var(--gold);
+  border-radius:14px;background:linear-gradient(180deg,#e6c363,#9b7228);
+  color:#140c07;font-weight:800;cursor:pointer
+}
+.title{
+  position:relative;z-index:3;
+  text-align:center;color:#e7c86e;
+  font-size:20px;font-weight:500;letter-spacing:.11em;
+  margin:14px 0 10px
+}
+.title:before,.title:after{
+  content:"";display:inline-block;vertical-align:middle;width:90px;height:1px;
+  margin:0 14px;background:linear-gradient(90deg,transparent,var(--gold-soft),transparent)
+}
+.top-arcs{
+  position:absolute;left:0;right:0;top:60px;height:250px;pointer-events:none;opacity:.58;
+}
+.top-arcs svg{width:100%;height:100%}
+.arc{fill:none;stroke:#9f762d;stroke-width:1;opacity:.56}
+.spark{fill:#f5d572;filter:drop-shadow(0 0 5px #f5d572)}
+
+.panel{
+  position:relative;z-index:2;
+  border:1px solid rgba(231,198,106,.48);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(231,198,106,.045),transparent 26%),
+    linear-gradient(145deg,rgba(39,23,15,.96),rgba(11,7,5,.96));
+  box-shadow:0 18px 42px rgba(0,0,0,.38),inset 0 0 35px rgba(231,198,106,.022)
+}
+.orb{
+  position:relative;z-index:4;
+  width:62px;height:62px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--gold);
+  background:radial-gradient(circle at 45% 35%,#4f311d 0,#17100c 68%);
+  color:#fff4db;font-size:25px;font-weight:500;
+  box-shadow:
+    0 0 0 1px rgba(110,70,23,.55),
+    0 0 21px rgba(231,198,106,.18),
+    inset 0 0 16px rgba(231,198,106,.08)
+}
+.orb:after{
+  content:"";position:absolute;inset:6px;border-radius:50%;
+  border-top:1px solid rgba(255,231,164,.25)
+}
+.orb.small{width:34px;height:34px;font-size:14px;border-width:1px}
+.orb.hero{width:96px;height:96px;font-size:36px}
+.orb.hero:before{
+  content:"";position:absolute;inset:-26px;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgba(231,198,106,.28) 0 1deg,transparent 1deg 5deg);
+  -webkit-mask:radial-gradient(circle,transparent 0 62%,#000 64%);
+  mask:radial-gradient(circle,transparent 0 62%,#000 64%);
+  opacity:.65;z-index:-1
+}
+.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.links path,.links line{
+  stroke:#c9933b;stroke-width:1.25;fill:none;stroke-dasharray:2 4;opacity:.7;
+  filter:drop-shadow(0 0 2px rgba(231,198,106,.25))
+}
+.links .solid{stroke-dasharray:none;opacity:.58}
+.links circle{fill:#f3d274;filter:drop-shadow(0 0 5px #f3d274)}
+
+.past-panel{width:520px;height:205px;margin:0 auto;padding-top:12px;overflow:hidden}
+.past-grid{
+  position:relative;z-index:4;width:330px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  grid-template-areas:"a b c" ". d e";
+  row-gap:10px;justify-items:center
+}
+.past-grid>:nth-child(1){grid-area:a}
+.past-grid>:nth-child(2){grid-area:b}
+.past-grid>:nth-child(3){grid-area:c}
+.past-grid>:nth-child(4){grid-area:d}
+.past-grid>:nth-child(5){grid-area:e}
+
+.age-row{display:grid;grid-template-columns:1fr 110px 1fr;gap:12px;margin-top:10px}
+.age-panel{height:295px;padding:14px 12px}
+.age-title{text-align:center;color:#e4c56c;font-size:15px;letter-spacing:.09em;margin-bottom:14px}
+.age-grid{
+  position:relative;z-index:3;display:grid;
+  grid-template-columns:1fr 1fr;grid-template-rows:auto auto auto;
+  gap:16px 52px;justify-items:center;align-items:center
+}
+.age-grid .center{grid-column:1/3}
+.bg1,.bg2{position:absolute;z-index:5;top:30%}
+.bg1{left:28%}.bg2{right:28%}
+.transition{
+  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px
+}
+.transition:before{
+  content:"";position:absolute;top:7%;bottom:7%;left:50%;width:1px;
+  background:linear-gradient(transparent,var(--gold-soft),var(--gold-soft),transparent);
+  box-shadow:0 0 9px rgba(231,198,106,.18)
+}
+.transition .orb{z-index:3}
+.dot{width:6px;height:6px;border-radius:50%;background:#f4d36f;box-shadow:0 0 12px #f4d36f;z-index:4}
+
+.mission-panel{height:255px;padding:14px 18px}
+.mission-grid{
+  position:relative;z-index:3;display:grid;grid-template-columns:1fr 1fr;
+  gap:18px 80px;justify-items:center;align-items:center
+}
+.mission-grid .center{grid-column:1/3;display:flex;flex-direction:column;align-items:center;gap:4px}
+.mission-label{color:#ead078;font-size:14px;letter-spacing:.1em}
+.mbg1,.mbg2{position:absolute;z-index:5;top:30%}
+.mbg1{left:30%}.mbg2{right:30%}
+
+.bottom-panel{padding:10px 0 14px}
+.cards{display:grid}
+.finance{grid-template-columns:repeat(4,1fr)}
+.relationships{grid-template-columns:repeat(3,1fr)}
+.forecast{grid-template-columns:repeat(5,1fr)}
+.forecast-input-block{
+  width:360px;
+  max-width:100%;
+  margin:0 auto 10px;
+  text-align:center
+}
+.forecast-input-label{
+  color:#d7bf82;
+  font:12px/1.2 system-ui,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:7px
+}
+#forecastYear{
+  width:150px;
+  height:42px;
+  border-radius:12px;
+  border:1px solid rgba(231,198,106,.58);
+  background:rgba(18,11,8,.92);
+  color:#fff4db;
+  text-align:center;
+  font-size:18px;
+  letter-spacing:.12em;
+  outline:none;
+  box-shadow:inset 0 0 16px rgba(231,198,106,.05),0 0 14px rgba(231,198,106,.06)
+}
+#forecastYear:focus{
+  border-color:#e7c66a;
+  box-shadow:0 0 0 2px rgba(231,198,106,.12),inset 0 0 16px rgba(231,198,106,.05)
+}
+.forecast .orb{margin:0 auto 10px}
+.card{
+  position:relative;text-align:center;min-height:132px;padding:9px 10px
+}
+.card:not(:last-child):after{
+  content:"";position:absolute;right:0;top:12%;bottom:12%;width:1px;
+  background:linear-gradient(transparent,rgba(231,198,106,.36),transparent)
+}
+.icon{
+  width:38px;height:38px;border-radius:50%;margin:0 auto 8px;
+  border:1px solid rgba(231,198,106,.55);display:flex;align-items:center;justify-content:center;
+  color:#e8c869;font-size:18px
+}
+.card .orb{margin:0 auto 10px}
+.double{display:flex;justify-content:center;gap:10px;margin-bottom:10px}
+.double .orb{margin:0}
+.label{
+  color:#e0cfaa;text-transform:uppercase;font:12px/1.25 system-ui,sans-serif;
+  letter-spacing:.02em
+}
+.footnote{text-align:center;color:#8b7758;font:13px system-ui,sans-serif;margin-top:18px}
+
+@media (max-width: 860px){
+  body{overflow-x:hidden}
+  .page{width:100%;max-width:820px;padding:14px 12px 24px}
+}
+@media (max-width: 600px){
+  .page{width:100%;padding:14px 10px 22px}
+  h1{font-size:29px;line-height:1.05;letter-spacing:.035em}
+  .author{font-size:16px}
+  .rule{width:78%;max-width:320px}
+  .input-block{width:100%;max-width:350px;margin-top:14px}
+  .date-wrap{gap:7px}
+  #dob{min-width:0;height:44px;font-size:17px;padding:0 12px}
+  .name-field{height:44px;font-size:16px;padding:0 12px}
+  .name-results{font-size:14px;padding-left:8px;padding-right:8px}
+  .calc{height:44px;padding:0 11px;font-size:12px}
+  .title{font-size:15px;margin:14px 0 8px}
+  .title:before,.title:after{width:42px;margin:0 7px}
+  .top-arcs{top:76px;height:210px}
+  .past-panel{width:100%;height:205px}
+  .past-grid{width:78%;max-width:330px}
+  .orb{width:58px;height:58px;font-size:23px}
+  .orb.small{width:31px;height:31px;font-size:13px}
+  .orb.hero{width:92px;height:92px;font-size:34px}
+  .age-row{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+  .age-panel{width:100%;height:295px}
+  .transition{height:215px;gap:7px}
+  .mission-panel{height:255px;padding:12px 8px}
+  .mission-grid{gap:16px 34px}
+  .mission-label{font-size:11px}
+  .finance,.relationships,.forecast{grid-template-columns:1fr 1fr}
+  .card{min-height:128px}
+  .card:nth-child(2n):after{display:none}
+  .relationships .card:last-child{grid-column:1/3}
+  .relationships .card:nth-child(2):after{display:none}
+  .forecast .card:last-child{grid-column:1/3}
+  .label{font-size:11px}
+  .icon{width:36px;height:36px;font-size:17px}
+}
+@media (max-width: 380px){
+  h1{font-size:25px}
+  .calc{padding:0 8px;font-size:11px}
+  .orb{width:54px;height:54px;font-size:21px}
+}
+
+
+
+
+
+
+/* Подписи ко второй версии — отдельно от кругов и их расчётов. */
+.period-highlight{color:#e7c66a}
+.orb.red-value{color:#f04445}
+.diagram-caption{
+  position:absolute;z-index:12;pointer-events:none;
+  color:#ead078;text-align:center;
+  font:500 13px/1.15 Georgia,"Times New Roman",serif;
+  letter-spacing:.06em;
+  white-space:nowrap;text-shadow:0 0 10px rgba(231,198,106,.10), 0 1px 3px #080503;
+  transform:translateX(-50%);
+}
+.diagram-caption.above{color:#ead078}
+@media(max-width:600px){
+ .diagram-caption{font-size:10px}
+ .diagram-caption.center-caption{font-size:10px}
+ .age-title{font-size:13px}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="stars"></div>
+
+  <div class="top-arcs">
+    <svg viewBox="0 0 1080 330" preserveAspectRatio="none">
+      <path class="arc" d="M20 90 Q180 20 360 115"/>
+      <path class="arc" d="M20 110 Q190 40 372 130"/>
+      <path class="arc" d="M20 132 Q200 58 385 146"/>
+      <path class="arc" d="M1060 90 Q900 20 720 115"/>
+      <path class="arc" d="M1060 110 Q890 40 708 130"/>
+      <path class="arc" d="M1060 132 Q880 58 695 146"/>
+      <circle class="spark" cx="72" cy="96" r="2.4"/>
+      <circle class="spark" cx="1008" cy="96" r="2.4"/>
+      <circle class="spark" cx="235" cy="60" r="2.2"/>
+      <circle class="spark" cx="845" cy="60" r="2.2"/>
+    </svg>
+  </div>
+
+  <header class="header">
+    <h1>ВАШ ЛИЧНЫЙ КОД СУДЬБЫ</h1>
+    <div class="rule"></div>
+    <div class="author">Нумеролог Женя Абдуллина</div>
+    <a class="consult-link" href="https://t.me/evgeniy_numerolog" target="_blank" rel="noopener noreferrer">Записаться на консультацию</a>
+    <div class="input-block">
+      <div class="input-label">ВВЕДИТЕ ДАТУ РОЖДЕНИЯ</div>
+      <div class="date-wrap">
+        <input id="dob" type="text" inputmode="numeric" maxlength="10" placeholder="ДД.ММ.ГГГГ" autocomplete="off">
+        <button class="calc" id="calcBtn" type="button">Рассчитать</button>
+      </div>
+      <div class="name-calculation">
+        <input class="name-field" id="firstName" type="text" placeholder="Имя" autocomplete="given-name">
+        <input class="name-field" id="lastName" type="text" placeholder="Фамилия" autocomplete="family-name">
+      </div>
+      <div class="name-results" aria-live="polite">
+        <div>Энергия имени — <span class="name-result-value" id="firstNameEnergy">—</span></div>
+        <div>Энергия фамилии — <span class="name-result-value" id="lastNameEnergy">—</span></div>
+      </div>
+      <div class="people-x-result" id="peopleXResult" hidden aria-live="polite"></div>
+    </div>
+  </header>
+
+  <div class="title">КАРМА ПРОШЛОГО ВОПЛОЩЕНИЯ</div>
+  <section class="panel past-panel">
+    <svg class="links" viewBox="0 0 680 250" preserveAspectRatio="none">
+      <path d="M150 78 Q230 108 340 205"/>
+      <path d="M340 78 L340 205"/>
+      <path d="M530 78 Q450 108 340 205"/>
+      <path d="M265 175 Q305 195 340 205"/>
+      <path d="M415 175 Q375 195 340 205"/>
+      <circle cx="340" cy="205" r="3"/>
+    </svg>
+    <div class="past-grid">
+      <div class="orb">15</div>
+      <div class="orb">11</div>
+      <div class="orb">15</div>
+      <div class="orb">9</div>
+      <div class="orb">10</div>
+    </div>
+  </section>
+
+  <section class="age-row">
+    <div class="panel age-panel">
+      <div class="age-title">1 ПЕРИОД <span class="period-highlight">ДО 25 ЛЕТ</span></div>
+      <svg class="links" viewBox="0 0 440 360" preserveAspectRatio="none">
+        <line class="solid" x1="110" y1="100" x2="220" y2="190"/>
+        <line class="solid" x1="330" y1="100" x2="220" y2="190"/>
+        <line class="solid" x1="220" y1="190" x2="110" y2="300"/>
+        <line class="solid" x1="220" y1="190" x2="330" y2="300"/>
+      </svg>
+      <div class="age-grid">
+        <div class="orb">19</div>
+        <div class="orb">4</div>
+        <div class="orb center">8</div>
+        <div class="orb">20</div>
+        <div class="orb">3</div>
+      </div>
+      <div class="orb small bg1">7</div>
+      <div class="orb small bg2">16</div>
+    </div>
+
+    <div class="transition">
+      <div class="orb">5</div>
+      <div class="dot"></div>
+      <div class="orb">14</div>
+      <div class="dot"></div>
+      <div class="orb">22</div>
+    </div>
+
+    <div class="panel age-panel">
+      <div class="age-title">2 ПЕРИОД <span class="period-highlight">25–35 ЛЕТ</span></div>
+      <svg class="links" viewBox="0 0 440 360" preserveAspectRatio="none">
+        <line class="solid" x1="110" y1="100" x2="220" y2="190"/>
+        <line class="solid" x1="330" y1="100" x2="220" y2="190"/>
+        <line class="solid" x1="220" y1="190" x2="110" y2="300"/>
+        <line class="solid" x1="220" y1="190" x2="330" y2="300"/>
+      </svg>
+      <div class="age-grid">
+        <div class="orb">2</div>
+        <div class="orb">11</div>
+        <div class="orb center">17</div>
+        <div class="orb">6</div>
+        <div class="orb">12</div>
+      </div>
+      <div class="orb small bg1">18</div>
+      <div class="orb small bg2">9</div>
+    </div>
+  </section>
+
+  <div class="title">3 ПЕРИОД 35+</div>
+  <section class="panel mission-panel">
+    <svg class="links" viewBox="0 0 1028 300" preserveAspectRatio="none">
+      <path d="M245 70 Q380 105 514 152"/>
+      <path d="M783 70 Q648 105 514 152"/>
+      <path d="M170 238 Q350 215 514 152"/>
+      <path d="M858 238 Q678 215 514 152"/>
+      <circle cx="514" cy="152" r="3"/>
+    </svg>
+    <div class="mission-grid">
+      <div class="orb">4</div>
+      <div class="orb">7</div>
+      <div class="center">
+        <div class="mission-label">СВЕРХМИССИЯ</div>
+        <div class="orb hero">21</div>
+      </div>
+      <div class="orb">10</div>
+      <div class="orb">19</div>
+    </div>
+    <div class="orb small mbg1">22</div>
+    <div class="orb small mbg2">15</div>
+  </section>
+
+  <div class="title">ФИНАНСОВЫЙ БЛОК</div>
+  <section class="panel bottom-panel">
+    <div class="cards finance">
+      <div class="card">
+        <div class="icon">◉</div>
+        <div class="orb">16</div>
+        <div class="label">Отношение<br>к деньгам</div>
+      </div>
+      <div class="card">
+        <div class="icon">▣</div>
+        <div class="orb">9</div>
+        <div class="label">Главный<br>финансовый блок</div>
+      </div>
+      <div class="card">
+        <div class="icon">↗</div>
+        <div class="orb">13</div>
+        <div class="label">Что открывает<br>финансовый поток</div>
+      </div>
+      <div class="card">
+        <div class="icon">◇</div>
+        <div class="orb">18</div>
+        <div class="label">Как удержать<br>деньги</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="title">ПРОГРАММА ОТНОШЕНИЙ</div>
+  <section class="panel bottom-panel">
+    <div class="cards relationships">
+      <div class="card">
+        <div class="icon">♡</div>
+        <div class="orb">8</div>
+        <div class="label">Какой урок<br>в отношениях</div>
+      </div>
+      <div class="card">
+        <div class="icon">◎</div>
+        <div class="double">
+          <div class="orb">15</div>
+          <div class="orb">7</div>
+        </div>
+        <div class="label">Какой партнёр<br>вам подходит</div>
+      </div>
+      <div class="card">
+        <div class="icon">△</div>
+        <div class="orb">10</div>
+        <div class="label">Где будут трудности<br>в отношениях</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="title">ПРОГНОЗ НА ГОД</div>
+  <div class="forecast-input-block">
+    <div class="forecast-input-label">Введите интересующий год</div>
+    <input id="forecastYear" type="text" inputmode="numeric" maxlength="4" placeholder="ГГГГ" autocomplete="off">
+  </div>
+  <section class="panel bottom-panel">
+    <div class="cards forecast">
+      <div class="card">
+        <div class="orb" id="forecastEnergyCircle">—</div>
+        <div class="label">Энергия<br>года</div>
+      </div>
+      <div class="card">
+        <div class="orb" id="forecastLessonCircle">—</div>
+        <div class="label">Урок<br>года</div>
+      </div>
+      <div class="card">
+        <div class="orb" id="forecastFunnelCircle">—</div>
+        <div class="label">Воронка<br>года</div>
+      </div>
+      <div class="card">
+        <div class="orb" id="forecastExamCircle">—</div>
+        <div class="label">Экзамен<br>года</div>
+      </div>
+      <div class="card">
+        <div class="orb" id="forecastTaskCircle">—</div>
+        <div class="label">Задача<br>года</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const dob = document.getElementById('dob');
+dob.addEventListener('input', () => {
+  let v = dob.value.replace(/\D/g,'').slice(0,8);
+  if(v.length > 4) v = v.slice(0,2)+'.'+v.slice(2,4)+'.'+v.slice(4);
+  else if(v.length > 2) v = v.slice(0,2)+'.'+v.slice(2);
+  dob.value = v;
+  document.getElementById('peopleXResult').hidden = true;
+  updateYearForecast();
+});
+
+const firstName = document.getElementById('firstName');
+const lastName = document.getElementById('lastName');
+const firstNameEnergy = document.getElementById('firstNameEnergy');
+const lastNameEnergy = document.getElementById('lastNameEnergy');
+
+const LETTER_ENERGY = {
+  // Русский алфавит
+  'А':22,'Б':1,'В':2,'Г':3,'Ч':3,'Д':4,'Е':5,'Ё':5,'Э':5,
+  'Ж':6,'З':6,'И':7,'Й':7,'К':8,'Л':9,'М':10,'Н':11,'О':12,
+  'П':13,'Р':14,'С':15,'Ц':15,'Т':16,'У':17,'Ф':18,'Х':18,
+  'Ш':19,'Щ':19,'Ъ':20,'Ы':20,'Ь':20,'Ю':21,'Я':21,
+
+  // Английский алфавит
+  'A':22,'B':1,'C':2,'D':3,'E':4,'F':5,'G':6,'H':7,'I':8,
+  'J':9,'K':10,'L':11,'M':12,'N':13,'O':14,'U':14,'Q':14,
+  'P':15,'R':16,'S':17,'T':18,'W':19,'V':19,'X':20,'Y':20,'Z':21
+};
+
+function calculateNameEnergy(value){
+  const letters = Array.from(value.trim().toUpperCase());
+  const energies = letters
+    .filter(letter => Object.prototype.hasOwnProperty.call(LETTER_ENERGY, letter))
+    .map(letter => LETTER_ENERGY[letter]);
+
+  if(!energies.length) return '—';
+  return reduce22(energies.reduce((sum, energy) => sum + energy, 0));
+}
+
+function updateNameEnergies(){
+  firstNameEnergy.textContent = calculateNameEnergy(firstName.value);
+  lastNameEnergy.textContent = calculateNameEnergy(lastName.value);
+}
+
+firstName.addEventListener('input', updateNameEnergies);
+lastName.addEventListener('input', updateNameEnergies);
+
+const forecastYear = document.getElementById('forecastYear');
+const forecastEnergyCircle = document.getElementById('forecastEnergyCircle');
+const forecastLessonCircle = document.getElementById('forecastLessonCircle');
+const forecastFunnelCircle = document.getElementById('forecastFunnelCircle');
+const forecastExamCircle = document.getElementById('forecastExamCircle');
+const forecastTaskCircle = document.getElementById('forecastTaskCircle');
+forecastYear.addEventListener('input', () => {
+  const year = forecastYear.value.replace(/\D/g,'').slice(0,4);
+  forecastYear.value = year;
+  updateYearForecast();
+});
+
+function reduce22(n){
+  while(n > 22) n -= 22;
+  if(n === 0) return 22;
+  return n;
+}
+
+function diff22(a,b){
+  const d = Math.abs(a-b);
+  return d === 0 ? 22 : d;
+}
+
+function parseDateValue(){
+  const raw = dob.value.trim();
+  const m = raw.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if(!m) return null;
+
+  const day = Number(m[1]);
+  const month = Number(m[2]);
+  const year = Number(m[3]);
+
+  const dt = new Date(year, month-1, day);
+  if(
+    dt.getFullYear() !== year ||
+    dt.getMonth() !== month-1 ||
+    dt.getDate() !== day
+  ) return null;
+
+  return {day, month, year};
+}
+
+// Код Людей X — сумма всех цифр даты, без сокращения до 22.
+const PEOPLE_X_CODES = new Set([19,28,29,37,38,39,46]);
+function updatePeopleX(day, month, year){
+  const result=document.getElementById('peopleXResult');
+  const digits=String(day).padStart(2,'0')+String(month).padStart(2,'0')+String(year).padStart(4,'0');
+  const code=[...digits].reduce((sum,digit)=>sum+Number(digit),0);
+  result.hidden=!PEOPLE_X_CODES.has(code);
+  result.textContent='';
+  if(!result.hidden){
+    result.append('Ваш код Людей X — ');
+    const value=document.createElement('strong');
+    value.textContent=code;
+    result.appendChild(value);
+  }
+}
+
+function calculateAll(day, month, year){
+  // Базовые позиции
+  const p1 = reduce22(day);
+  const p2 = month;
+  const p3 = reduce22(String(year).split('').reduce((s,d)=>s+Number(d),0));
+  const p4 = reduce22(p1+p2);
+  const p5 = reduce22(p2+p3);
+  const p6 = reduce22(p4+p5);
+  const p7 = reduce22(p1+p2+p3);
+
+  // ДО 25 ЛЕТ
+  const pA = reduce22(p1+p4);
+  const pB = reduce22(p2+p4);
+  const under25bg1 = reduce22(p1+pB);
+  const under25bg2 = reduce22(p2+pA);
+
+  // Переход
+  const pE = reduce22(p4+p6);
+  const pF = reduce22(p5+p6);
+
+  // 25–35 ЛЕТ
+  const pD = reduce22(p3+p5);
+  const pC = reduce22(p2+p5);
+  const age2535bg1 = reduce22(p2+pD);
+  const age2535bg2 = reduce22(p3+pC);
+
+  // 35+
+  const superMission = reduce22(p3+p7);
+  const missionLeft = reduce22(p7+superMission);
+  const missionRight = reduce22(p3+superMission);
+  const missionBg1 = reduce22(p3+missionLeft);
+  const missionBg2 = reduce22(p7+missionRight);
+
+  // ПРОШЛОЕ
+  const p9 = diff22(p1,p2);
+  const p10 = diff22(p2,p3);
+  const p11 = diff22(p9,p10);
+
+  const p19 = reduce22(p4+p6);
+
+  // Сначала уменьшаем сумму 9п+10п+11п до диапазона 1–22,
+  // затем вычитаем 7п. При результате 0 используем 22.
+  let pastSum = p9+p10+p11;
+  while(pastSum > 22) pastSum -= 22;
+  let p15 = pastSum - p7;
+  if(p15 === 0) p15 = 22;
+
+  const p15A = reduce22(p9+p10+p11);
+
+  // ФИНАНСЫ
+  const moneyAttitude = diff22(p10,pA);
+  const mainMoneyBlock = reduce22(p4+pB);
+  const moneyFlow = diff22(pE,p4);
+  const keepMoney = reduce22(diff22(pF,p4)+p5);
+
+  // ОТНОШЕНИЯ
+  const relationshipLesson = reduce22(p2+6);
+  const partner1 = reduce22(p2+p5);
+  const partner2 = diff22(partner1,22);
+  const relationshipDifficulty = reduce22(p4+6);
+
+  return {
+    p1,p2,p3,p4,p5,p6,p7,pA,pB,pE,pF,pC,pD,
+    under25bg1,under25bg2,age2535bg1,age2535bg2,
+    superMission,missionLeft,missionRight,missionBg1,missionBg2,
+    p9,p10,p11,p15,p15A,
+    moneyAttitude,mainMoneyBlock,moneyFlow,keepMoney,
+    relationshipLesson,partner1,partner2,relationshipDifficulty
+  };
+}
+
+function clearYearForecast(clearEnergy = true){
+  if(clearEnergy) forecastEnergyCircle.textContent = '—';
+  forecastLessonCircle.textContent = '—';
+  forecastFunnelCircle.textContent = '—';
+  forecastExamCircle.textContent = '—';
+  forecastTaskCircle.textContent = '—';
+}
+
+function calculateYearForecast(base, yearText){
+  const yearEnergy = reduce22(
+    yearText.split('').reduce((sum, digit) => sum + Number(digit), 0)
+  );
+
+  return {
+    yearEnergy,
+    yearLesson: reduce22(base.p2 + yearEnergy),
+    yearFunnel: reduce22(base.p4 + yearEnergy),
+    yearExam: reduce22(base.p3 + yearEnergy),
+    yearTask: reduce22(
+      base.p1 + yearEnergy +
+      base.p2 + yearEnergy +
+      base.p3 + yearEnergy
+    )
+  };
+}
+
+function updateYearForecast(){
+  const yearText = forecastYear.value.trim();
+  if(!/^[1-9]\d{3}$/.test(yearText)){
+    clearYearForecast();
+    return;
+  }
+
+  const yearEnergy = reduce22(
+    yearText.split('').reduce((sum, digit) => sum + Number(digit), 0)
+  );
+  forecastEnergyCircle.textContent = yearEnergy;
+
+  const date = parseDateValue();
+  if(!date){
+    clearYearForecast(false);
+    return;
+  }
+
+  const base = calculateAll(date.day, date.month, date.year);
+  const result = calculateYearForecast(base, yearText);
+  forecastEnergyCircle.textContent = result.yearEnergy;
+  forecastLessonCircle.textContent = result.yearLesson;
+  forecastFunnelCircle.textContent = result.yearFunnel;
+  forecastExamCircle.textContent = result.yearExam;
+  forecastTaskCircle.textContent = result.yearTask;
+}
+
+function putOrb(index, value){
+  const orb = allOrbs[index];
+  if(orb) orb.textContent = value;
+}
+
+document.getElementById('calcBtn').addEventListener('click', () => {
+  const date = parseDateValue();
+  if(!date){
+    alert('Введите корректную дату рождения в формате ДД.ММ.ГГГГ.');
+    return;
+  }
+
+  const r = calculateAll(date.day,date.month,date.year);
+  updatePeopleX(date.day,date.month,date.year);
+
+  // ПРОШЛОЕ
+  putOrb(0, r.p15A);  // верхний левый
+  putOrb(1, r.p11);   // верхний центральный
+  putOrb(2, r.p15);   // верхний правый
+  putOrb(3, r.p9);    // нижний левый
+  putOrb(4, r.p10);   // нижний правый
+
+  // ДО 25 ЛЕТ
+  putOrb(5, r.p1);
+  putOrb(6, r.p2);
+  putOrb(7, r.p4);
+  putOrb(8, r.pB);  // п.В — слева
+  putOrb(9, r.pA);  // п.А — справа
+  putOrb(10, r.under25bg1);
+  putOrb(11, r.under25bg2);
+
+  // Переход
+  putOrb(12, r.p6);
+  putOrb(13, r.pE);
+  putOrb(14, r.pF);
+
+  // 25–35 ЛЕТ
+  putOrb(15, r.p2);
+  putOrb(16, r.p3);
+  putOrb(17, r.p5);
+  putOrb(18, r.pD);
+  putOrb(19, r.pC);
+  putOrb(20, r.age2535bg1);
+  putOrb(21, r.age2535bg2);
+
+  // 35+
+  putOrb(22, r.p3);
+  putOrb(23, r.p7);
+  putOrb(24, r.superMission);
+  putOrb(25, r.missionLeft);
+  putOrb(26, r.missionRight);
+  putOrb(27, r.missionBg1);
+  putOrb(28, r.missionBg2);
+
+  // Финансовый блок
+  putOrb(29, r.moneyAttitude);
+  putOrb(30, r.mainMoneyBlock);
+  putOrb(31, r.moneyFlow);
+  putOrb(32, r.keepMoney);
+
+  // Программа отношений
+  putOrb(33, r.relationshipLesson);
+  putOrb(34, r.partner1);
+  putOrb(35, r.partner2);
+  putOrb(36, r.relationshipDifficulty);
+
+  // Прогноз на год
+  updateYearForecast();
+});
+
+
+
+/* ===== ЗАФИКСИРОВАННАЯ РАССТАНОВКА КРУГОВ ===== */
+const APPROVED_LAYOUT = {"orb_0":{"x":-18,"y":15},"orb_1":{"x":-1,"y":-1},"orb_2":{"x":18,"y":18},"orb_3":{"x":-80,"y":34},"orb_4":{"x":-26,"y":38},"orb_5":{"x":0,"y":-9},"orb_6":{"x":-1,"y":-7},"orb_7":{"x":0,"y":0},"orb_8":{"x":0,"y":0},"orb_9":{"x":0,"y":0},"orb_10":{"x":-76,"y":58},"orb_11":{"x":72,"y":56},"orb_12":{"x":-2,"y":-4},"orb_13":{"x":0,"y":0},"orb_14":{"x":1,"y":7},"orb_15":{"x":-1,"y":-6},"orb_16":{"x":-3,"y":-8},"orb_17":{"x":0,"y":0},"orb_18":{"x":0,"y":0},"orb_19":{"x":0,"y":0},"orb_20":{"x":-74,"y":54},"orb_21":{"x":76,"y":53},"orb_22":{"x":0,"y":0},"orb_23":{"x":0,"y":0},"orb_24":{"x":2,"y":6},"orb_25":{"x":-12,"y":-78},"orb_26":{"x":33,"y":-74},"orb_27":{"x":-2,"y":27},"orb_28":{"x":10,"y":32},"orb_29":{"x":0,"y":0},"orb_30":{"x":0,"y":0},"orb_31":{"x":0,"y":0},"orb_32":{"x":0,"y":0},"orb_33":{"x":0,"y":0},"orb_34":{"x":0,"y":0},"orb_35":{"x":0,"y":0},"orb_36":{"x":0,"y":0}};
+
+const allOrbs = [...document.querySelectorAll('.orb')];
+// Красным выделяются именно три отмеченные позиции, а не все такие же числа.
+[7, 8, 13].forEach(i => allOrbs[i]?.classList.add('red-value'));
+
+allOrbs.forEach((orb, i) => {
+  const pos = APPROVED_LAYOUT['orb_' + i] || {x:0,y:0};
+  orb.style.transform = `translate(${pos.x || 0}px, ${pos.y || 0}px)`;
+});
+
+
+
+/* Подписи по утверждённым скриншотам.
+   index соответствует порядку существующих кругов; расчёты не изменяются. */
+const diagramCaptions = [
+  {i:0,text:'кем был',where:'below'},
+  {i:2,text:'что натворил',where:'below'},
+  {i:5,text:'личность',where:'below'},
+  {i:6,text:'урок жизни',where:'below'},
+  {i:7,text:'воронка',where:'below'},
+  {i:8,text:'травма',where:'above'},
+  {i:9,text:'внут. ребёнок',where:'above'},
+  {i:12,text:'талант',where:'above'},
+  {i:13,text:'блок • рост',where:'above'},
+  {i:14,text:'зависть • успех',where:'above'},
+  {i:15,text:'урок жизни',where:'below'},
+  {i:16,text:'потенциал',where:'below'},
+  {i:17,text:'проявленность',where:'below'},
+  {i:22,text:'потенциал',where:'below'},
+  {i:23,text:'предназначение',where:'below'}
+];
+// Общая подпись ровно по центру между двумя нижними кругами второго периода.
+const sharedCaption=document.createElement('div');
+sharedCaption.className='diagram-caption';
+sharedCaption.textContent='бессознательная программа';
+const secondAgePanel=allOrbs[18]?.closest('.age-panel');
+if(secondAgePanel) secondAgePanel.appendChild(sharedCaption);
+const placedCaptions=[];
+diagramCaptions.forEach(({i,text,where}) => {
+  const orb=allOrbs[i];
+  const panel=orb?.closest('.past-panel,.age-panel,.mission-panel,.transition');
+  if(!panel) return;
+  const caption=document.createElement('div');
+  caption.className='diagram-caption'+(where==='above'?' above':'')+(panel.classList.contains('transition')?' center-caption':'');
+  caption.textContent=text;
+  panel.appendChild(caption);
+  placedCaptions.push({orb,panel,caption,where});
+});
+function positionDiagramCaptions(){
+  if(secondAgePanel && allOrbs[18] && allOrbs[19]){
+    const left=allOrbs[18].getBoundingClientRect();
+    const right=allOrbs[19].getBoundingClientRect();
+    const panel=secondAgePanel.getBoundingClientRect();
+    const centerLeft=left.left+left.width/2;
+    const centerRight=right.left+right.width/2;
+    sharedCaption.style.left=((centerLeft+centerRight)/2-panel.left)+'px';
+    sharedCaption.style.top=(Math.max(left.bottom,right.bottom)-panel.top+3)+'px';
+  }
+  placedCaptions.forEach(({orb,panel,caption,where}) => {
+    const a=orb.getBoundingClientRect();
+    const b=panel.getBoundingClientRect();
+    let left=(a.left+a.width/2-b.left);
+    let top=(where==='above' ? a.top-b.top-19 : a.bottom-b.top+3);
+
+    if(caption.textContent==='кем был' && allOrbs[0] && allOrbs[3]){
+      const upper=allOrbs[0].getBoundingClientRect();
+      const lower=allOrbs[3].getBoundingClientRect();
+      left=(upper.left+upper.width/2 + lower.left+lower.width/2)/2 - b.left;
+      top=((upper.bottom + lower.top)/2 - b.top) - 8;
+    }
+    if(caption.textContent==='что натворил' && allOrbs[2] && allOrbs[4]){
+      const upper=allOrbs[2].getBoundingClientRect();
+      const lower=allOrbs[4].getBoundingClientRect();
+      left=(upper.left+upper.width/2 + lower.left+lower.width/2)/2 - b.left;
+      top=((upper.bottom + lower.top)/2 - b.top) - 8;
+    }
+    if(caption.textContent==='зависть • успех'){
+      left -= 10;
+    }
+
+    caption.style.left=left+'px';
+    caption.style.top=top+'px';
+  });
+}
+positionDiagramCaptions();
+window.addEventListener('resize', positionDiagramCaptions);
+</script>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
